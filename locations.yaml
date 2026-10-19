@@ -1,0 +1,74 @@
+# Candidate manufacturing locations. `as_given` is what was requested.
+# Where `assumed: true`, the requested name looks like a typo and the resolved
+# place is our assumption; confirm or overrule.
+locations:
+  - key: palmdale_ca
+    as_given: "Palmdale, CA"
+    name: Palmdale
+    state: CA
+    place_geoid: "0655156"
+    county_geoid: "06037"      # Los Angeles
+  - key: baltimore_md
+    as_given: "Baltimore, MD"
+    name: Baltimore
+    state: MD
+    place_geoid: "2404000"
+    county_geoid: "24510"      # Baltimore city (independent city)
+  - key: clearfield_ut
+    as_given: "Clearfield, UT"
+    name: Clearfield
+    state: UT
+    place_geoid: "4913850"
+    county_geoid: "49011"      # Davis
+  - key: rocket_center_wv
+    as_given: "Rocket Center, WY"
+    name: Rocket Center
+    state: WV
+    assumed: true
+    note: >
+      No Rocket Center exists in Wyoming. Assumed Rocket Center, WV (Allegany
+      Ballistics Laboratory area, Mineral County). It is unincorporated and not a
+      Census place or CDP, so city-level figures are n/a and the county is used.
+    place_geoid: null
+    county_geoid: "54057"      # Mineral
+    lat: 39.5911               # approximate point, Rocket Center WV
+    lon: -78.8083
+  - key: sunnyvale_ca
+    as_given: "Sunnyvale, CA"
+    name: Sunnyvale
+    state: CA
+    place_geoid: "0677000"
+    county_geoid: "06085"      # Santa Clara
+  - key: corinne_ut
+    as_given: "Corinne, UT"
+    name: Corinne
+    state: UT
+    place_geoid: "4915830"
+    county_geoid: "49003"      # Box Elder
+    note: Very small city (a few hundred people); county and labor shed matter more.
+  - key: redondo_beach_ca
+    as_given: "Redondo Beach, CA"
+    name: Redondo Beach
+    state: CA
+    place_geoid: "0660018"
+    county_geoid: "06037"      # Los Angeles
+  - key: st_augustine_fl
+    as_given: "Saint Augustine, FL"
+    name: St. Augustine
+    state: FL
+    place_geoid: "1262500"
+    county_geoid: "12109"      # St. Johns
+  - key: san_diego_ca
+    as_given: "San Diego, CA"
+    name: San Diego
+    state: CA
+    place_geoid: "0666000"
+    county_geoid: "06073"      # San Diego
+  - key: iuka_ms
+    as_given: "Luka, MS"
+    name: Iuka
+    state: MS
+    assumed: true
+    note: Assumed Iuka, MS (Tishomingo County); "Luka" looks like a typo.
+    place_geoid: "2835300"
+    county_geoid: "28141"      # Tishomingo
