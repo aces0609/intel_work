@@ -11,6 +11,7 @@ import pandas as pd
 from . import bls, census, education
 from .common import OUT, ROOT, load_locations
 from .geo import SHED_MILES, resolve
+from .jobs import report as jobs_report
 
 SOURCES = [
     ("Population, age, education, labor force, income, rent, home value",
@@ -31,6 +32,7 @@ ASSUMPTIONS = [
     "Large-employer headcounts come from varied sources and years; some are projections or multi-site totals (see notes column). The list is not exhaustive.",
     "For Palmdale, Redondo Beach, San Diego and Sunnyvale the 40-mile shed collapses to one or a few huge counties (e.g. all of Los Angeles County), which overstates the local pool; use the city and county rows there. Palmdale's real pool is the Antelope Valley, not all of LA County.",
     "County Business Patterns counts of 500+ employee establishments are zero when none exist or the cell is suppressed, and a single large site is counted once regardless of headcount.",
+    "Active job postings come from employers' own career sites via data/job_sources_*.yaml (see src/touch_labor/jobs/README.md): a posting is demand, not headcount, and only covered employers appear. Hourly pay is shown only where the posting states it, and a site median needs at least 10 such postings.",
     "Medians (age, income, rent, home value) are shown for city and county only; they cannot be summed across the shed.",
 ]
 
@@ -112,6 +114,17 @@ def main(skip_census: bool = False) -> None:
         })
         summary.append(row)
 
+    jobs = jobs_report.tables() if jobs_report.available() else None
+    if jobs:
+        by_site = jobs["by_site"].set_index("site_key")
+        for row, loc in zip(summary, locs):
+            if loc["key"] in by_site.index:
+                b = by_site.loc[loc["key"]]
+                row["Active postings, tracked employers"] = int(b["active_postings"])
+                row["...of which production/warehouse/retail"] = int(b["active_hourly_class"])
+                row["...production / skilled trades"] = int(b["production_trades"])
+                row["Median posted hourly pay"] = b["median_posted_hourly_pay"]
+
     OUT.mkdir(exist_ok=True)
     path = OUT / "touch_labor_comparison.xlsx"
     sheets = {"Summary": pd.DataFrame(summary)}
@@ -123,6 +136,11 @@ def main(skip_census: bool = False) -> None:
     sheets["Labor & wages"] = pd.concat(wage_frames, ignore_index=True)
     sheets["Schools"] = pd.concat(school_frames, ignore_index=True)
     sheets["Large employers"] = emp
+    if jobs:
+        sheets["Jobs by site"] = jobs["by_site"]
+        sheets["Jobs by company"] = jobs["by_company"]
+        sheets["Active jobs"] = jobs["detail"]
+        sheets["Job sources"] = jobs["coverage"]
     sheets["Sources & assumptions"] = pd.DataFrame(
         [{"Item": "Source", "Detail": f"{a}: {b}"} for a, b in SOURCES]
         + [{"Item": "Assumption", "Detail": a} for a in ASSUMPTIONS]

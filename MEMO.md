@@ -66,6 +66,38 @@ URLs, confidence and caveats):
 - **San Diego:** Naval Base San Diego (about 38,900 including active duty); General Atomics, Solar Turbines, NASSCO, Northrop (2019 figures, low confidence); Collins Aerospace Chula Vista (1,303).
 - **Iuka:** Toyota Mississippi (2,400, outer commute), Caterpillar Corinth/Booneville (1,600+), Northrop's Iuka plant (200+, expanding), Keytronic (420), Kimberly-Clark (300+).
 
+## Active job postings (snapshot 2026-10-19)
+
+Open postings pulled from employers' own career sites within 25 miles of each site (40 for the three rural
+ones), covering 97 company-boards (Walmart, Home Depot, Amazon plus about 90 regional employers; details in
+`src/touch_labor/jobs/README.md` and the workbook's "Job sources" sheet). "Hourly-class" means the title looks like
+production, warehouse or store work. Re-run the pipeline to refresh (the memo numbers are a point in time).
+
+| Site | Active postings | Hourly-class | Production / trades | Warehouse | Retail / store | Biggest hourly-class posters (hourly-class / all postings) |
+|---|---|---|---|---|---|---|
+| Palmdale, CA | 482 | 188 | 50 | 25 | 113 | Home Depot 39/47, Northrop 24/176, Kohl's 22/27, Target 21/22 |
+| Baltimore, MD | 1,000 | 584 | 83 | 62 | 439 | Home Depot 245/291, Walmart 77/118, Dollar General 74/92, Royal Farms 37/53 |
+| Clearfield, UT | 429 | 240 | 151 | 12 | 77 | Williams International 79/95, Home Depot 53/63, Northrop 36/104, Walmart 23/38 |
+| Rocket Center, WV | 63 | 38 | 2 | 2 | 34 | Dollar General 28/28, Dollar Tree 4/4; Northrop's plant posts little |
+| Sunnyvale, CA | 3,184 | 498 | 169 | 61 | 268 | Home Depot 184/224, Costco 95/171, Bloom Energy 34/114, Lumentum 26/51 |
+| Corinne, UT | 310 | 166 | 76 | 16 | 74 | Home Depot 53/63, Walmart 33/51, Campbell's 17/22, West Liberty Foods 17/24 |
+| Redondo Beach, CA | 2,955 | 823 | 303 | 91 | 429 | Home Depot 379/459, SpaceX 124/743, Relativity 62/319, Walmart 47/67 |
+| St. Augustine, FL | 168 | 131 | 18 | 11 | 102 | Home Depot 56/69, Dollar General 48/50, Ring Power 12/15 |
+| San Diego, CA | 1,626 | 568 | 100 | 80 | 388 | Home Depot 195/255, Costco 117/208, Target 72/91, Albertsons 58/80 |
+| Iuka, MS | 250 | 212 | 19 | 3 | 190 | Dollar General 161/164, Dollar Tree 11/11, Home Depot 10/12 |
+
+What stands out: hourly hiring is dominated by retail and dollar-store chains at every site, so manufacturing
+competes for the same entry-level pool mostly on pay and schedule. Production-type postings are concentrated at
+Redondo Beach (SpaceX and Relativity), Clearfield (Williams International, Northrop) and Corinne (Campbell's, West
+Liberty, Northrop Promontory). Rocket Center and St. Augustine show very little visible hourly demand. Posted pay
+is usually not stated (a site median is shown only with 10+ priced postings: about $22/hr in most CA and UT
+sites, $18.50 in Baltimore, $21 in the Iuka area).
+
+Limits: postings are demand signals, not headcount (one posting can mean several hires; evergreen postings
+persist); only covered employers appear (FedEx, Tesla, General Atomics, Publix, hospitals and most staffing firms
+could not be read without bypassing bot protection or logins); Amazon's hourly fulfillment roles sit on a separate
+site that is not read; Dollar General figures are per-store postings; job-title classification is keyword-based.
+
 ## Caveats
 
 - Small-place ACS figures (Corinne, Iuka) carry wide margins of error; Rocket Center has no city-level data.

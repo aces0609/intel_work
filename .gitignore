@@ -3,4 +3,5 @@ __pycache__/
 *.pyc
 .ruff_cache/
 data/raw/
+data/jobs/jobs.db
 .env

@@ -1,0 +1,898 @@
+# Job-board sources for hourly "touch labor" near the four sites (palmdale_ca, redondo_beach_ca,
+# sunnyvale_ca, san_diego_ca). Generated 2026-10-19 from live unauthenticated requests (User-Agent
+# intel_work-research/0.1). Walmart, Home Depot and Amazon are intentionally absent (dedicated connectors).
+#
+# Field notes:
+#  verified: true only if a live request to the board returned job data (a valid total/postings payload).
+#  total_postings_seen: the largest total returned by any live query for that company (see the
+#    "Live counts" list in notes). Free-text location search is fuzzy: Workday/Oracle/Phenom match the
+#    string anywhere (Lancaster also matches Lancaster PA/NH, Sunnyvale matches Sunnyvale TX, Eightfold's
+#    location filter behaved state-wide), so always post-filter on the parsed city/state of each posting.
+#  platform "other": config.ats names the system and config.method/url/params/json is the exact request.
+#  platform "unsupported": no usable unauthenticated JSON endpoint was demonstrated (reason in notes).
+
+- company: Northrop Grumman
+  platform: workday
+  config: {tenant: ngc, wd: wd1, site: Northrop_Grumman_External_Site}
+  sites: [palmdale_ca, redondo_beach_ca, sunnyvale_ca, san_diego_ca]
+  search_terms:
+    palmdale_ca: [Palmdale, Lancaster, Edwards]
+    redondo_beach_ca: [Redondo Beach, El Segundo, Manhattan Beach]
+    sunnyvale_ca: [Sunnyvale, San Jose, Mountain View]
+    san_diego_ca: [San Diego, Rancho Bernardo, Poway]
+  verified: true
+  total_postings_seen: 349
+  hourly_relevance: high
+  careers_url: https://ngc.wd1.myworkdayjobs.com/Northrop_Grumman_External_Site
+  notes: 'Workday text search matches the location string. Includes Aeronautics Palmdale (B-21), Space Park Redondo Beach,
+    Sunnyvale and San Diego. Many postings need clearance; filter titles for assembler/technician/mechanic. Live counts (term=total):
+    Palmdale=237, Lancaster=0, Edwards=59, Redondo Beach=225, El Segundo=139, Manhattan Beach=49, Sunnyvale=116, San Jose=3,
+    Mountain View=0, San Diego=349, Rancho Bernardo=151, Poway=0.'
+- company: Lockheed Martin
+  platform: eightfold
+  config: {host: lockheedmartin.eightfold.ai, domain: lockheedmartin.com, endpoint: 'GET /api/pcsx/search?domain=lockheedmartin.com&query=&location=&start=0&num=5'}
+  sites: [palmdale_ca, sunnyvale_ca]
+  search_terms:
+    palmdale_ca: [Palmdale, Lancaster]
+    sunnyvale_ca: [Sunnyvale, Santa Clara, Mountain View]
+  verified: true
+  total_postings_seen: 570
+  hourly_relevance: high
+  careers_url: https://lockheedmartin.eightfold.ai/careers
+  notes: 'Skunk Works Palmdale; Space Systems Sunnyvale. Old Workday tenant (lmco) is not used; careers site is Eightfold.
+    location param is free text such as Sunnyvale, CA. Live counts (term=total): Palmdale=570, Lancaster=570, Sunnyvale=434,
+    Santa Clara=434, Mountain View=434.'
+- company: The Boeing Company
+  platform: workday
+  config: {tenant: boeing, wd: wd1, site: EXTERNAL_CAREERS}
+  sites: [palmdale_ca, redondo_beach_ca]
+  search_terms:
+    palmdale_ca: [Palmdale, Lancaster]
+    redondo_beach_ca: [El Segundo, Long Beach, Hawthorne, Torrance]
+  verified: true
+  total_postings_seen: 148
+  hourly_relevance: medium
+  careers_url: https://boeing.wd1.myworkdayjobs.com/EXTERNAL_CAREERS
+  notes: 'Palmdale search returned 0 at time of check (small site); El Segundo / Long Beach may have hits. Workday location
+    text like USA - California - El Segundo. Live counts (term=total): Palmdale=0, Lancaster=0, El Segundo=148, Long Beach=25,
+    Hawthorne=0, Torrance=0.'
+- company: RTX (Raytheon, Collins Aerospace, Pratt & Whitney)
+  platform: workday
+  config: {tenant: globalhr, wd: wd5, site: REC_RTX_Ext_Gateway}
+  sites: [redondo_beach_ca, san_diego_ca]
+  search_terms:
+    redondo_beach_ca: [El Segundo, Torrance, Manhattan Beach]
+    san_diego_ca: [San Diego, Chula Vista, Poway]
+  verified: true
+  total_postings_seen: 149
+  hourly_relevance: high
+  careers_url: https://globalhr.wd5.myworkdayjobs.com/REC_RTX_Ext_Gateway
+  notes: 'One RTX Workday gateway covers Raytheon (El Segundo) and Collins Aerospace (Rohr, Chula Vista). Tenant name is globalhr.
+    Live counts (term=total): El Segundo=149, Torrance=0, Manhattan Beach=0, San Diego=17, Chula Vista=8, Poway=0.'
+- company: Honeywell Aerospace
+  platform: other
+  config:
+    ats: oracle_hcm_candidate_experience
+    method: GET
+    url: https://ibqbjb.fa.ocs.oraclecloud.com/hcmRestApi/resources/latest/recruitingCEJobRequisitions
+    params: {onlyData: 'true', expand: requisitionList.secondaryLocations, finder: 'findReqs;siteNumber=CX_1,limit=5,keyword=California,sortBy=POSTING_DATES_DESC'}
+    response: items[0].TotalJobsCount and items[0].requisitionList[] (Title, PrimaryLocation)
+  sites: [redondo_beach_ca]
+  search_terms:
+    redondo_beach_ca: [Torrance, Los Angeles]
+  verified: true
+  total_postings_seen: 28
+  hourly_relevance: medium
+  careers_url: https://careers.honeywell.com/en/sites/Honeywell
+  notes: 'Oracle HCM Cloud (careers.honeywell.com fronts it); unauthenticated REST works. keyword is free text, use City,
+    CA. Old Workday tenant is not the live board. Live counts (term=total): Torrance=0, Los Angeles=1.'
+- company: Moog Inc
+  platform: workday
+  config: {tenant: moog, wd: wd5, site: MOOG_External_Career_Site}
+  sites: [redondo_beach_ca]
+  search_terms:
+    redondo_beach_ca: [Torrance, Gardena]
+  verified: true
+  total_postings_seen: 34
+  hourly_relevance: high
+  careers_url: https://moog.wd5.myworkdayjobs.com/MOOG_External_Career_Site
+  notes: 'Found via the link on moog.com/careers. Torrance is Moog aircraft controls / space and defense. Live counts (term=total):
+    Torrance=34, Gardena=0.'
+- company: SpaceX
+  platform: greenhouse
+  config: {token: spacex}
+  sites: [redondo_beach_ca]
+  search_terms:
+    redondo_beach_ca: [Hawthorne, Redondo Beach]
+  verified: true
+  total_postings_seen: 743
+  hourly_relevance: high
+  careers_url: https://boards.greenhouse.io/spacex
+  notes: 'Greenhouse board spacex (about 2.7k jobs). Locations like Hawthorne, CA. List endpoint has no location param: filter
+    client-side on location.name. Live counts (term=total): Hawthorne=743, Redondo Beach=0.'
+- company: Relativity Space
+  platform: greenhouse
+  config: {token: relativity}
+  sites: [redondo_beach_ca]
+  search_terms:
+    redondo_beach_ca: [Long Beach]
+  verified: true
+  total_postings_seen: 319
+  hourly_relevance: medium
+  careers_url: https://boards.greenhouse.io/relativity
+  notes: 'Long Beach factory (about 20 mi from Redondo Beach). Live counts (term=total): Long Beach=319.'
+- company: Rocket Lab
+  platform: greenhouse
+  config: {token: rocketlab}
+  sites: [redondo_beach_ca]
+  search_terms:
+    redondo_beach_ca: [Long Beach]
+  verified: true
+  total_postings_seen: 265
+  hourly_relevance: medium
+  careers_url: https://boards.greenhouse.io/rocketlab
+  notes: 'Long Beach spacecraft production (about 20 mi from Redondo Beach); most jobs on the board are elsewhere. Live counts
+    (term=total): Long Beach=265.'
+- company: Chevron (El Segundo refinery)
+  platform: workday
+  config: {tenant: chevron, wd: wd5, site: jobs}
+  sites: [redondo_beach_ca]
+  search_terms:
+    redondo_beach_ca: [El Segundo]
+  verified: true
+  total_postings_seen: 2
+  hourly_relevance: medium
+  careers_url: https://chevron.wd5.myworkdayjobs.com/jobs
+  notes: 'Refinery operators / maintenance craft; not in the researched list, added as a large local industrial employer.
+    Live counts (term=total): El Segundo=2.'
+- company: Stellant Systems (L3 Electron Devices)
+  platform: unsupported
+  config: {ats: icims, portal: 'https://careers-stellantsystems.icims.com/'}
+  sites: [redondo_beach_ca]
+  search_terms:
+    redondo_beach_ca: [Torrance]
+  verified: false
+  total_postings_seen: null
+  hourly_relevance: high
+  careers_url: https://stellantsystems.com/careers/
+  notes: iCIMS portal; no unauthenticated JSON API demonstrated (HTML only).
+- company: Robinson Helicopter Co
+  platform: unsupported
+  config: {ats: paycom, portal: 'https://www.paycomonline.net/v4/ats/web.php/jobs?clientkey=B12A2E9887B149F6AE8C78BB0F4D2B65'}
+  sites: [redondo_beach_ca]
+  search_terms:
+    redondo_beach_ca: [Torrance]
+  verified: false
+  total_postings_seen: null
+  hourly_relevance: high
+  careers_url: https://www.robinsonheli.com/careers
+  notes: Paycom ATS (HTML). No public JSON demonstrated.
+- company: Hi-Shear Corporation (LISI Aerospace)
+  platform: unsupported
+  config: {}
+  sites: [redondo_beach_ca]
+  search_terms:
+    redondo_beach_ca: [Torrance]
+  verified: false
+  total_postings_seen: null
+  hourly_relevance: high
+  careers_url: https://lisi-aerospace.com/careers
+  notes: Could not locate a careers page / ATS (lisi-aerospace.com/careers did not resolve). Small employer; consider manual.
+- company: Tesla
+  platform: unsupported
+  config: {portal: 'https://www.tesla.com/careers'}
+  sites: [sunnyvale_ca]
+  search_terms:
+    sunnyvale_ca: [Fremont, Palo Alto]
+  verified: false
+  total_postings_seen: null
+  hourly_relevance: high
+  careers_url: https://www.tesla.com/careers
+  notes: tesla.com/careers returned HTTP 403 to a plain script request (bot protection); not bypassed.
+- company: General Atomics
+  platform: unsupported
+  config: {ats: brassring, portal: 'https://sjobs.brassring.com/TGnewUI/Search/Home/Home?partnerid=25539'}
+  sites: [san_diego_ca]
+  search_terms:
+    san_diego_ca: [San Diego, Poway]
+  verified: false
+  total_postings_seen: null
+  hourly_relevance: high
+  careers_url: https://www.ga.com/careers/
+  notes: 'IBM/Kenexa BrassRing; search API needs a session cookie/token from the HTML app, not attempted. Big hourly employer
+    (Poway/Rancho Bernardo): top candidate for manual or browser-based collection.'
+- company: General Dynamics NASSCO
+  platform: unsupported
+  config: {portal: 'https://www.gd.com/careers'}
+  sites: [san_diego_ca]
+  search_terms:
+    san_diego_ca: [San Diego]
+  verified: false
+  total_postings_seen: null
+  hourly_relevance: high
+  careers_url: https://www.gd.com/careers
+  notes: gd.com/careers returned HTTP 403 to a plain script request (bot protection); not bypassed. NASSCO postings are under
+    gd.com/careers/...-nassco-opportunity.
+- company: BAE Systems San Diego Ship Repair
+  platform: other
+  config:
+    ats: phenom
+    method: POST
+    url: https://jobs.baesystems.com/widgets
+    json:
+      lang: en_us
+      deviceType: desktop
+      country: us
+      pageName: search-results
+      ddoKey: refineSearch
+      sortBy: ''
+      subsearch: ''
+      from: 0
+      jobs: true
+      counts: true
+      all_fields: [category, country, state, city, type]
+      size: 10
+      clearAll: false
+      jdsource: facets
+      isSliderEnable: false
+      pageId: page11
+      siteType: external
+      keywords: San Diego
+      global: true
+      selected_fields: {}
+      locationData: {}
+    response: refineSearch.totalHits and refineSearch.data.jobs[] (title, city, state)
+  sites: [san_diego_ca]
+  search_terms:
+    san_diego_ca: [San Diego]
+  verified: true
+  total_postings_seen: 48
+  hourly_relevance: high
+  careers_url: https://jobs.baesystems.com/global/en
+  notes: 'Phenom People site. Unauthenticated POST to /widgets works from a script. keywords is free text; each job carries
+    city/state, so post-filter on state=California. Live counts (term=total): San Diego=48.'
+- company: Solar Turbines (Caterpillar)
+  platform: workday
+  config: {tenant: cat, wd: wd5, site: CaterpillarCareers}
+  sites: [san_diego_ca]
+  search_terms:
+    san_diego_ca: [San Diego]
+  verified: true
+  total_postings_seen: 3
+  hourly_relevance: high
+  careers_url: https://cat.wd5.myworkdayjobs.com/CaterpillarCareers
+  notes: 'Caterpillar tenant covers Solar Turbines San Diego. Few postings at a time. Live counts (term=total): San Diego=3.'
+- company: Kratos Defense
+  platform: unsupported
+  config: {ats: submit4jobs (ATS on demand), portal: 'https://kratosdefense.submit4jobs.com/'}
+  sites: [san_diego_ca]
+  search_terms:
+    san_diego_ca: [San Diego]
+  verified: false
+  total_postings_seen: null
+  hourly_relevance: medium
+  careers_url: https://www.kratosdefense.com/careers/open-roles/
+  notes: Embedded submit4jobs iframe; no public JSON found.
+- company: Cubic
+  platform: unsupported
+  config: {}
+  sites: [san_diego_ca]
+  search_terms:
+    san_diego_ca: [San Diego]
+  verified: false
+  total_postings_seen: null
+  hourly_relevance: medium
+  careers_url: https://cubic.com/careers
+  notes: cubic.com/careers returned a tiny stub page with no ATS link; not resolvable by script.
+- company: Target
+  platform: workday
+  config: {tenant: target, wd: wd5, site: targetcareers}
+  sites: [palmdale_ca, redondo_beach_ca, sunnyvale_ca, san_diego_ca]
+  search_terms:
+    palmdale_ca: [Palmdale, Lancaster]
+    redondo_beach_ca: [Redondo Beach, Torrance, Hawthorne]
+    sunnyvale_ca: [Sunnyvale, Santa Clara, Mountain View]
+    san_diego_ca: [San Diego, Chula Vista, La Mesa]
+  verified: true
+  total_postings_seen: 70
+  hourly_relevance: high
+  careers_url: https://target.wd5.myworkdayjobs.com/targetcareers
+  notes: 'Store + distribution center postings; Workday location text includes city. Live counts (term=total): Palmdale=15,
+    Lancaster=37, Redondo Beach=12, Torrance=8, Hawthorne=12, Sunnyvale=13, Santa Clara=9, Mountain View=8, San Diego=70,
+    Chula Vista=15, La Mesa=68.'
+- company: Lowe's
+  platform: workday
+  config: {tenant: lowes, wd: wd5, site: LWS_External_CS}
+  sites: [palmdale_ca, redondo_beach_ca, sunnyvale_ca, san_diego_ca]
+  search_terms:
+    palmdale_ca: [Palmdale, Lancaster]
+    redondo_beach_ca: [Torrance, Hawthorne, Long Beach]
+    sunnyvale_ca: [Sunnyvale, Santa Clara, Mountain View]
+    san_diego_ca: [San Diego, Chula Vista, El Cajon]
+  verified: true
+  total_postings_seen: 43
+  hourly_relevance: high
+  careers_url: https://lowes.wd5.myworkdayjobs.com/LWS_External_CS
+  notes: 'Store postings by city. Live counts (term=total): Palmdale=10, Lancaster=43, Torrance=10, Hawthorne=6, Long Beach=10,
+    Sunnyvale=9, Santa Clara=0, Mountain View=0, San Diego=7, Chula Vista=6, El Cajon=0.'
+- company: Costco Wholesale
+  platform: other
+  config:
+    ats: jibe (iCIMS) career site
+    method: GET
+    url: https://careers.costco.com/api/jobs
+    params: {location: 'Torrance, CA', limit: '100', page: '1'}
+    response: totalCount, jobs[].data{title,city,state,location_name,req_id,posted_date,categories}
+    note: location is a radius (geo) search; neighbouring towns are returned too
+  sites: [palmdale_ca, redondo_beach_ca, sunnyvale_ca, san_diego_ca]
+  search_terms:
+    palmdale_ca: [Palmdale, Lancaster]
+    redondo_beach_ca: [Torrance, Hawthorne]
+    sunnyvale_ca: [Sunnyvale, San Jose]
+    san_diego_ca: [San Diego, Chula Vista]
+  verified: true
+  total_postings_seen: 717
+  hourly_relevance: high
+  careers_url: https://careers.costco.com
+  notes: 'Jibe-hosted site in front of iCIMS; the /api/jobs JSON works unauthenticated (limit up to 100 observed). Palmdale
+    search returns Lancaster and Santa Clarita warehouses. Live counts (term=total): Palmdale=177, Lancaster=62, Torrance=660,
+    Hawthorne=460, Sunnyvale=521, San Jose=717, San Diego=430, Chula Vista=328.'
+- company: Albertsons Companies (Vons, Pavilions, Safeway, Albertsons)
+  platform: other
+  config:
+    ats: oracle_hcm_candidate_experience
+    method: GET
+    url: https://eofd.fa.us6.oraclecloud.com/hcmRestApi/resources/latest/recruitingCEJobRequisitions
+    params: {onlyData: 'true', expand: requisitionList.secondaryLocations, finder: 'findReqs;siteNumber=CX_1001,limit=5,keyword=San
+        Diego,sortBy=POSTING_DATES_DESC'}
+    response: items[0].TotalJobsCount and items[0].requisitionList[] (Title, PrimaryLocation)
+  sites: [palmdale_ca, redondo_beach_ca, sunnyvale_ca, san_diego_ca]
+  search_terms:
+    palmdale_ca: [Palmdale, Lancaster]
+    redondo_beach_ca: [Redondo Beach, Torrance]
+    sunnyvale_ca: [Sunnyvale, Santa Clara]
+    san_diego_ca: [San Diego, Chula Vista]
+  verified: true
+  total_postings_seen: 181
+  hourly_relevance: high
+  careers_url: https://www.albertsonscompanies.com/careers
+  notes: 'careers page redirects to Oracle Candidate Experience site CX_1001. keyword is free text: Sunnyvale also matches
+    Sunnyvale TX and Lancaster matches Lancaster NH, so search City, CA and post-filter on PrimaryLocation. Live counts (term=total):
+    Palmdale=1, Lancaster=21, Redondo Beach=2, Torrance=4, Sunnyvale=12, Santa Clara=59, San Diego=181, Chula Vista=11.'
+- company: TJX (T.J. Maxx, Marshalls, HomeGoods)
+  platform: other
+  config:
+    ats: phenom
+    method: POST
+    url: https://jobs.tjx.com/widgets
+    json:
+      lang: en_us
+      deviceType: desktop
+      country: us
+      pageName: search-results
+      ddoKey: refineSearch
+      sortBy: ''
+      subsearch: ''
+      from: 0
+      jobs: true
+      counts: true
+      all_fields: [category, country, state, city, type]
+      size: 10
+      clearAll: false
+      jdsource: facets
+      isSliderEnable: false
+      pageId: page11
+      siteType: external
+      keywords: Palmdale
+      global: true
+      selected_fields: {}
+      locationData: {}
+    response: refineSearch.totalHits and refineSearch.data.jobs[] (title, city, state)
+  sites: [palmdale_ca, redondo_beach_ca, sunnyvale_ca, san_diego_ca]
+  search_terms:
+    palmdale_ca: [Palmdale, Lancaster]
+    redondo_beach_ca: [Torrance, Redondo Beach, Hawthorne]
+    sunnyvale_ca: [Sunnyvale, Santa Clara, Mountain View]
+    san_diego_ca: [San Diego, Chula Vista]
+  verified: true
+  total_postings_seen: 156
+  hourly_relevance: high
+  careers_url: https://jobs.tjx.com/global/en
+  notes: 'Phenom People. /widgets POST works unauthenticated; returns city and state per job. Live counts (term=total): Palmdale=2,
+    Lancaster=37, Torrance=4, Redondo Beach=142, Hawthorne=3, Sunnyvale=0, Santa Clara=30, Mountain View=6, San Diego=156,
+    Chula Vista=4.'
+- company: Dollar Tree / Family Dollar
+  platform: other
+  config:
+    ats: phenom
+    method: POST
+    url: https://careers.dollartree.com/widgets
+    json:
+      lang: en_us
+      deviceType: desktop
+      country: us
+      pageName: search-results
+      ddoKey: refineSearch
+      sortBy: ''
+      subsearch: ''
+      from: 0
+      jobs: true
+      counts: true
+      all_fields: [category, country, state, city, type]
+      size: 10
+      clearAll: false
+      jdsource: facets
+      isSliderEnable: false
+      pageId: page11
+      siteType: external
+      keywords: Palmdale
+      global: true
+      selected_fields: {}
+      locationData: {}
+    response: refineSearch.totalHits and refineSearch.data.jobs[] (title, city, state)
+  sites: [palmdale_ca, redondo_beach_ca, sunnyvale_ca, san_diego_ca]
+  search_terms:
+    palmdale_ca: [Palmdale, Lancaster]
+    redondo_beach_ca: [Torrance, Hawthorne]
+    sunnyvale_ca: [Sunnyvale, San Jose]
+    san_diego_ca: [San Diego, Chula Vista]
+  verified: true
+  total_postings_seen: 256
+  hourly_relevance: medium
+  careers_url: https://careers.dollartree.com/us/en
+  notes: 'Phenom People /widgets POST; small store-level postings. Live counts (term=total): Palmdale=6, Lancaster=42, Torrance=10,
+    Hawthorne=5, Sunnyvale=3, San Jose=256, San Diego=256, Chula Vista=24.'
+- company: Dollar General
+  platform: other
+  config:
+    ats: oracle_hcm_candidate_experience
+    method: GET
+    url: https://ibxwjb.fa.ocs.oraclecloud.com/hcmRestApi/resources/latest/recruitingCEJobRequisitions
+    params: {onlyData: 'true', expand: requisitionList.secondaryLocations, finder: 'findReqs;siteNumber=CX_1,limit=5,keyword=Palmdale,sortBy=POSTING_DATES_DESC'}
+    response: items[0].TotalJobsCount and items[0].requisitionList[] (Title, PrimaryLocation)
+  sites: [palmdale_ca, san_diego_ca]
+  search_terms:
+    palmdale_ca: [Palmdale, Lancaster]
+    san_diego_ca: [San Diego, Chula Vista]
+  verified: true
+  total_postings_seen: 109
+  hourly_relevance: medium
+  careers_url: https://careers.dollargeneral.com
+  notes: 'Oracle HCM Cloud (site CX_1). Few CA stores, so low counts. Live counts (term=total): Palmdale=4, Lancaster=109,
+    San Diego=9, Chula Vista=0.'
+- company: Kohl's
+  platform: workday
+  config: {tenant: kohls, wd: wd504, site: kohlscareers}
+  sites: [palmdale_ca, redondo_beach_ca, sunnyvale_ca, san_diego_ca]
+  search_terms:
+    palmdale_ca: [Palmdale, Lancaster]
+    redondo_beach_ca: [Torrance, Hawthorne, Long Beach]
+    sunnyvale_ca: [Sunnyvale, Santa Clara, San Jose]
+    san_diego_ca: [San Diego, Chula Vista]
+  verified: true
+  total_postings_seen: 81
+  hourly_relevance: medium
+  careers_url: https://kohls.wd504.myworkdayjobs.com/kohlscareers
+  notes: 'Unusual Workday pod wd504. Found via careers.kohls.com. Live counts (term=total): Palmdale=5, Lancaster=22, Torrance=4,
+    Hawthorne=0, Long Beach=81, Sunnyvale=0, Santa Clara=0, San Jose=5, San Diego=5, Chula Vista=9.'
+- company: Petco
+  platform: workday
+  config: {tenant: petco, wd: wd504, site: External}
+  sites: [san_diego_ca]
+  search_terms:
+    san_diego_ca: [San Diego, Chula Vista]
+  verified: true
+  total_postings_seen: 2
+  hourly_relevance: medium
+  careers_url: https://petco.wd504.myworkdayjobs.com/External
+  notes: 'Pod wd504. HQ in San Diego plus store / distribution roles. Live counts (term=total): San Diego=1, Chula Vista=2.'
+- company: Ross Stores
+  platform: unsupported
+  config: {ats: avature, portal: 'https://jobs.rossstores.com'}
+  sites: [palmdale_ca, redondo_beach_ca, sunnyvale_ca, san_diego_ca]
+  search_terms:
+    palmdale_ca: [Palmdale, Lancaster]
+    redondo_beach_ca: [Torrance, Hawthorne]
+    sunnyvale_ca: [Sunnyvale, Santa Clara]
+    san_diego_ca: [San Diego, Chula Vista]
+  verified: false
+  total_postings_seen: null
+  hourly_relevance: high
+  careers_url: https://jobs.rossstores.com
+  notes: Avature site; no public JSON endpoint demonstrated.
+- company: Ralphs / Food 4 Less (Kroger)
+  platform: unsupported
+  config: {}
+  sites: [palmdale_ca, redondo_beach_ca, san_diego_ca]
+  search_terms:
+    palmdale_ca: [Palmdale, Lancaster]
+    redondo_beach_ca: [Redondo Beach, Torrance]
+    san_diego_ca: [San Diego, Chula Vista]
+  verified: false
+  total_postings_seen: null
+  hourly_relevance: high
+  careers_url: https://www.kroger.com/careers
+  notes: Kroger career hosts (jobs.kroger.com, kroger.com/careers, krogerfamilycareers.com) failed TLS verification or DNS
+    from a plain script; jobs.krogerfamily.com returned 403. Not bypassed. Workday tenant not identified.
+- company: Stater Bros. Markets
+  platform: unsupported
+  config: {ats: SAP SuccessFactors / Jobs2Web, portal: 'https://careers.staterbros.com/search/'}
+  sites: [palmdale_ca, san_diego_ca]
+  search_terms:
+    palmdale_ca: [Palmdale, Lancaster]
+    san_diego_ca: [San Diego, Chula Vista]
+  verified: false
+  total_postings_seen: null
+  hourly_relevance: high
+  careers_url: https://careers.staterbros.com
+  notes: Jobs2Web/SuccessFactors (hcm41.sapsf.com); HTML search only, no unauthenticated JSON shown.
+- company: Sprouts Farmers Market
+  platform: unsupported
+  config:
+    ats: icims
+    portals: [storeops-sprouts.icims.com, distributioncenter-sprouts.icims.com]
+  sites: [redondo_beach_ca, sunnyvale_ca, san_diego_ca]
+  search_terms:
+    redondo_beach_ca: [Torrance]
+    sunnyvale_ca: [Sunnyvale]
+    san_diego_ca: [San Diego]
+  verified: false
+  total_postings_seen: null
+  hourly_relevance: medium
+  careers_url: https://jobs.sprouts.com/jobs
+  notes: iCIMS; HTML only.
+- company: Smart & Final
+  platform: unsupported
+  config: {}
+  sites: [palmdale_ca, redondo_beach_ca, sunnyvale_ca, san_diego_ca]
+  search_terms:
+    palmdale_ca: [Palmdale, Lancaster]
+    redondo_beach_ca: [Torrance]
+    sunnyvale_ca: [Sunnyvale, San Jose]
+    san_diego_ca: [San Diego]
+  verified: false
+  total_postings_seen: null
+  hourly_relevance: medium
+  careers_url: https://www.smartandfinal.com/careers
+  notes: careers page shows no ATS link; jobs.smartandfinal.com does not resolve.
+- company: UPS
+  platform: other
+  config:
+    ats: phenom
+    method: POST
+    url: https://www.jobs-ups.com/widgets
+    json:
+      lang: en_us
+      deviceType: desktop
+      country: us
+      pageName: search-results
+      ddoKey: refineSearch
+      sortBy: ''
+      subsearch: ''
+      from: 0
+      jobs: true
+      counts: true
+      all_fields: [category, country, state, city, type]
+      size: 10
+      clearAll: false
+      jdsource: facets
+      isSliderEnable: false
+      pageId: page11
+      siteType: external
+      keywords: California
+      global: true
+      selected_fields: {}
+      locationData: {}
+    response: refineSearch.totalHits and refineSearch.data.jobs[] (title, city, state)
+  sites: [palmdale_ca, redondo_beach_ca, sunnyvale_ca, san_diego_ca]
+  search_terms:
+    palmdale_ca: [Palmdale, Lancaster]
+    redondo_beach_ca: [Torrance, Gardena]
+    sunnyvale_ca: [Sunnyvale, San Jose]
+    san_diego_ca: [San Diego, Chula Vista]
+  verified: true
+  total_postings_seen: 78
+  hourly_relevance: high
+  careers_url: https://www.jobs-ups.com/us/en
+  notes: 'Phenom People. City keywords often return 0 (UPS hub names vary): search California and filter on the city/state
+    returned per job. Live counts (term=total): Palmdale=0, Lancaster=0, Torrance=0, Gardena=0, Sunnyvale=2, San Jose=6, San
+    Diego=0, Chula Vista=0.'
+- company: FedEx
+  platform: unsupported
+  config: {portal: 'https://careers.fedex.com'}
+  sites: [palmdale_ca, redondo_beach_ca, sunnyvale_ca, san_diego_ca]
+  search_terms:
+    palmdale_ca: [Palmdale, Lancaster]
+    redondo_beach_ca: [Torrance, Gardena]
+    sunnyvale_ca: [Sunnyvale, San Jose]
+    san_diego_ca: [San Diego, Chula Vista]
+  verified: false
+  total_postings_seen: null
+  hourly_relevance: high
+  careers_url: https://careers.fedex.com
+  notes: Paradox-hosted careers site; /api/jobs and /api/apply/v2/jobs returned 403 Access Denied to a script. Not bypassed.
+- company: TD SYNNEX
+  platform: workday
+  config: {tenant: synnex, wd: wd5, site: tdsynnexcareers}
+  sites: [sunnyvale_ca]
+  search_terms:
+    sunnyvale_ca: [Fremont, Sunnyvale]
+  verified: true
+  total_postings_seen: 10
+  hourly_relevance: high
+  careers_url: https://synnex.wd5.myworkdayjobs.com/tdsynnexcareers
+  notes: 'Tenant is synnex (not tdsynnex). Fremont distribution / logistics. Live counts (term=total): Fremont=10, Sunnyvale=0.'
+- company: Allied Universal Security Services
+  platform: unsupported
+  config: {ats: icims, portal: 'https://jobs.aus.com'}
+  sites: [palmdale_ca, redondo_beach_ca, sunnyvale_ca, san_diego_ca]
+  search_terms:
+    palmdale_ca: [Palmdale, Lancaster]
+    redondo_beach_ca: [Torrance, Redondo Beach]
+    sunnyvale_ca: [Sunnyvale, San Jose]
+    san_diego_ca: [San Diego]
+  verified: false
+  total_postings_seen: null
+  hourly_relevance: medium
+  careers_url: https://jobs.aus.com
+  notes: Radancy front end over iCIMS; no unauthenticated JSON. Mostly security guard roles, not touch labor.
+- company: Kelly Services (staffing)
+  platform: workday
+  config: {tenant: kellyservices, wd: wd503, site: corporatecareers-kellyservices-com}
+  sites: [palmdale_ca, redondo_beach_ca, sunnyvale_ca, san_diego_ca]
+  search_terms:
+    palmdale_ca: [Palmdale]
+    redondo_beach_ca: [Torrance]
+    sunnyvale_ca: [Sunnyvale]
+    san_diego_ca: [San Diego]
+  verified: true
+  total_postings_seen: 1
+  hourly_relevance: low
+  careers_url: https://kellyservices.wd503.myworkdayjobs.com/corporatecareers-kellyservices-com
+  notes: 'Board is Kelly corporate roles only (1 CA hit); staffing job orders live elsewhere. Low value. Live counts (term=total):
+    Palmdale=0, Torrance=0, Sunnyvale=0, San Diego=0.'
+- company: Intuitive Surgical
+  platform: smartrecruiters
+  config: {company: Intuitive}
+  sites: [sunnyvale_ca]
+  search_terms:
+    sunnyvale_ca: [Sunnyvale, Santa Clara, Mountain View]
+  verified: true
+  total_postings_seen: 304
+  hourly_relevance: high
+  careers_url: https://careers.intuitive.com/en/
+  notes: 'SmartRecruiters company id Intuitive (about 750 postings). Filter with ?city=Sunnyvale&region=CA or q. Live counts
+    (term=total): Sunnyvale=304, Santa Clara=2, Mountain View=0.'
+- company: Applied Materials
+  platform: workday
+  config: {tenant: amat, wd: wd1, site: External}
+  sites: [sunnyvale_ca]
+  search_terms:
+    sunnyvale_ca: [Sunnyvale, Santa Clara]
+  verified: true
+  total_postings_seen: 507
+  hourly_relevance: medium
+  careers_url: https://amat.wd1.myworkdayjobs.com/External
+  notes: 'Most local jobs are listed under Santa Clara; Sunnyvale returns few or none. Also served via jobs.appliedmaterials.com
+    (Radancy). Live counts (term=total): Sunnyvale=0, Santa Clara=507.'
+- company: Danaher (Cepheid)
+  platform: workday
+  config: {tenant: danaher, wd: wd1, site: DanaherJobs}
+  sites: [sunnyvale_ca]
+  search_terms:
+    sunnyvale_ca: [Sunnyvale, Santa Clara]
+  verified: true
+  total_postings_seen: 22
+  hourly_relevance: high
+  careers_url: https://danaher.wd1.myworkdayjobs.com/DanaherJobs
+  notes: 'Cepheid (Sunnyvale) is a Danaher operating company; one shared Danaher board. Live counts (term=total): Sunnyvale=22,
+    Santa Clara=2.'
+- company: Lam Research
+  platform: eightfold
+  config: {host: lamresearch.eightfold.ai, domain: lamresearch.com, endpoint: 'GET /api/pcsx/search?domain=lamresearch.com&query=&location=&start=0&num=5'}
+  sites: [sunnyvale_ca]
+  search_terms:
+    sunnyvale_ca: [Fremont, Sunnyvale, San Jose]
+  verified: true
+  total_postings_seen: 239
+  hourly_relevance: high
+  careers_url: https://careers.lamresearch.com/careers
+  notes: 'Eightfold. Fremont is HQ/manufacturing. Location strings look like US-CA-Fremont (1010). Live counts (term=total):
+    Fremont=239, Sunnyvale=239, San Jose=239.'
+- company: Jabil
+  platform: workday
+  config: {tenant: jabil, wd: wd5, site: Jabil_Careers}
+  sites: [sunnyvale_ca]
+  search_terms:
+    sunnyvale_ca: [San Jose, Santa Clara]
+  verified: true
+  total_postings_seen: 13
+  hourly_relevance: high
+  careers_url: https://jabil.wd5.myworkdayjobs.com/Jabil_Careers
+  notes: 'Electronics manufacturing services; San Jose site. Live counts (term=total): San Jose=13, Santa Clara=0.'
+- company: Flex
+  platform: workday
+  config: {tenant: flextronics, wd: wd1, site: Careers}
+  sites: [sunnyvale_ca]
+  search_terms:
+    sunnyvale_ca: [Milpitas, San Jose, Fremont]
+  verified: true
+  total_postings_seen: 61
+  hourly_relevance: high
+  careers_url: https://flextronics.wd1.myworkdayjobs.com/Careers
+  notes: 'EMS manufacturer; Milpitas / San Jose sites. Tenant flextronics, board Careers. Live counts (term=total): Milpitas=61,
+    San Jose=1, Fremont=0.'
+- company: Lumentum
+  platform: workday
+  config: {tenant: lumentum, wd: wd5, site: LITE}
+  sites: [sunnyvale_ca]
+  search_terms:
+    sunnyvale_ca: [San Jose, Milpitas, Santa Clara]
+  verified: true
+  total_postings_seen: 66
+  hourly_relevance: medium
+  careers_url: https://lumentum.wd5.myworkdayjobs.com/LITE
+  notes: 'Photonics manufacturing, San Jose / Milpitas. Live counts (term=total): San Jose=66, Milpitas=5, Santa Clara=0.'
+- company: Bloom Energy
+  platform: workday
+  config: {tenant: bloomenergy, wd: wd1, site: BloomEnergyCareers}
+  sites: [sunnyvale_ca]
+  search_terms:
+    sunnyvale_ca: [Sunnyvale, San Jose, Fremont]
+  verified: true
+  total_postings_seen: 71
+  hourly_relevance: high
+  careers_url: https://bloomenergy.wd1.myworkdayjobs.com/BloomEnergyCareers
+  notes: 'Found via bloomenergy.com/careers. Fuel-cell manufacturing; Bay Area sites. Live counts (term=total): Sunnyvale=3,
+    San Jose=71, Fremont=49.'
+- company: Lucid Motors
+  platform: greenhouse
+  config: {token: lucidmotors}
+  sites: [sunnyvale_ca]
+  search_terms:
+    sunnyvale_ca: [Newark, Fremont]
+  verified: true
+  total_postings_seen: 82
+  hourly_relevance: high
+  careers_url: https://boards.greenhouse.io/lucidmotors
+  notes: 'Newark CA vehicle R&D / pilot production; about 25 miles from Sunnyvale. Main factory is Arizona. Live counts (term=total):
+    Newark=82, Fremont=4.'
+- company: Apple
+  platform: unsupported
+  config: {portal: 'https://jobs.apple.com'}
+  sites: [sunnyvale_ca]
+  search_terms:
+    sunnyvale_ca: [Sunnyvale, Cupertino]
+  verified: false
+  total_postings_seen: null
+  hourly_relevance: low
+  careers_url: https://jobs.apple.com
+  notes: careers.apple.com redirects to an Apple ID auth flow; the jobs.apple.com search API needs a CSRF token from the web
+    app. Not attempted.
+- company: Illumina
+  platform: workday
+  config: {tenant: illumina, wd: wd1, site: illumina-careers}
+  sites: [san_diego_ca]
+  search_terms:
+    san_diego_ca: [San Diego, Carlsbad]
+  verified: true
+  total_postings_seen: 67
+  hourly_relevance: medium
+  careers_url: https://illumina.wd1.myworkdayjobs.com/illumina-careers
+  notes: 'Manufacturing operators in San Diego. Live counts (term=total): San Diego=67, Carlsbad=0.'
+- company: Dexcom
+  platform: workday
+  config: {tenant: dexcom, wd: wd1, site: Dexcom}
+  sites: [san_diego_ca]
+  search_terms:
+    san_diego_ca: [San Diego, Carlsbad]
+  verified: true
+  total_postings_seen: 46
+  hourly_relevance: medium
+  careers_url: https://dexcom.wd1.myworkdayjobs.com/Dexcom
+  notes: 'CGM manufacturing (San Diego HQ); not in the researched list. Live counts (term=total): San Diego=46, Carlsbad=0.'
+- company: Thermo Fisher Scientific
+  platform: other
+  config:
+    ats: phenom
+    method: POST
+    url: https://jobs.thermofisher.com/widgets
+    json:
+      lang: en_us
+      deviceType: desktop
+      country: us
+      pageName: search-results
+      ddoKey: refineSearch
+      sortBy: ''
+      subsearch: ''
+      from: 0
+      jobs: true
+      counts: true
+      all_fields: [category, country, state, city, type]
+      size: 10
+      clearAll: false
+      jdsource: facets
+      isSliderEnable: false
+      pageId: page11
+      siteType: external
+      keywords: San Diego
+      global: true
+      selected_fields: {}
+      locationData: {}
+    response: refineSearch.totalHits and refineSearch.data.jobs[] (title, city, state)
+  sites: [san_diego_ca]
+  search_terms:
+    san_diego_ca: [San Diego, Carlsbad]
+  verified: true
+  total_postings_seen: 32
+  hourly_relevance: medium
+  careers_url: https://jobs.thermofisher.com/global/en
+  notes: 'Phenom People /widgets POST works (Carlsbad is Life Technologies manufacturing). Live counts (term=total): San Diego=27,
+    Carlsbad=32.'
+- company: Qualcomm
+  platform: eightfold
+  config: {host: qualcomm.eightfold.ai, domain: qualcomm.com, endpoint: 'GET /api/pcsx/search?domain=qualcomm.com&query=&location=&start=0&num=5'}
+  sites: [san_diego_ca]
+  search_terms:
+    san_diego_ca: [San Diego]
+  verified: true
+  total_postings_seen: 712
+  hourly_relevance: low
+  careers_url: https://careers.qualcomm.com/careers
+  notes: 'Engineering HQ; little touch labor. Live counts (term=total): San Diego=712.'
+- company: Sony Electronics
+  platform: workday
+  config: {tenant: sonyglobal, wd: wd1, site: SonyGlobalCareers}
+  sites: [san_diego_ca]
+  search_terms:
+    san_diego_ca: [San Diego]
+  verified: true
+  total_postings_seen: 32
+  hourly_relevance: low
+  careers_url: https://sonyglobal.wd1.myworkdayjobs.com/SonyGlobalCareers
+  notes: 'Sony Interactive / Electronics, mostly corporate. Live counts (term=total): San Diego=32.'
+- company: Edwards Air Force Base (civil service)
+  platform: unsupported
+  config: {ats: usajobs, endpoint: 'https://data.usajobs.gov/api/search'}
+  sites: [palmdale_ca]
+  search_terms:
+    palmdale_ca: [Edwards AFB, Palmdale]
+  verified: false
+  total_postings_seen: null
+  hourly_relevance: medium
+  careers_url: https://www.usajobs.gov
+  notes: USAJOBS Search API returned 401 without a registered API key + email header; not attempted further.
+- company: Naval Base San Diego / Navy civilian jobs
+  platform: unsupported
+  config: {ats: usajobs, endpoint: 'https://data.usajobs.gov/api/search'}
+  sites: [san_diego_ca]
+  search_terms:
+    san_diego_ca: [San Diego]
+  verified: false
+  total_postings_seen: null
+  hourly_relevance: medium
+  careers_url: https://www.usajobs.gov
+  notes: 'Same as Edwards: needs a USAJOBS API key.'
+- company: World Class Distribution Inc
+  platform: unsupported
+  config: {}
+  sites: [palmdale_ca]
+  search_terms:
+    palmdale_ca: [Palmdale]
+  verified: false
+  total_postings_seen: null
+  hourly_relevance: high
+  careers_url: ''
+  notes: Small Palmdale distributor; no website resolved (worldclassdistribution.com did not resolve). Likely staffed through
+    agencies.
+- company: Sierra Proto Express / PCB Fab Express
+  platform: unsupported
+  config: {}
+  sites: [sunnyvale_ca]
+  search_terms:
+    sunnyvale_ca: [Sunnyvale]
+  verified: false
+  total_postings_seen: null
+  hourly_relevance: high
+  careers_url: https://www.pcbfabexpress.com/careers
+  notes: Small PCB maker; /careers returned 404; no ATS found.

@@ -1,0 +1,479 @@
+# Job-board sources for hourly "touch labor" employers near clearfield_ut and corinne_ut.
+# Researched 2026-10-19 with live unauthenticated requests (User-Agent "intel_work-research/0.1").
+# verified=true means the live request returned job data. total_postings_seen is the count in that response
+# (often the whole board, not just Utah). Skipped on purpose: Walmart, Home Depot, Amazon (dedicated connectors).
+# Generic note for every "other" entry: locations must be filtered client side by city/state text.
+
+- company: Northrop Grumman
+  platform: workday
+  config: {tenant: ngc, wd: wd1, site: Northrop_Grumman_External_Site}
+  sites: [clearfield_ut, corinne_ut]
+  search_terms:
+    clearfield_ut: [Clearfield, Layton, Ogden]
+    corinne_ut: [Promontory, Corinne, Brigham City]
+  verified: true
+  total_postings_seen: 111
+  hourly_relevance: high
+  careers_url: https://jobs.northropgrumman.com/careers
+  notes: "Clearfield search returned 111 (locationsText like 'United States-Utah-Clearfield'). searchText is fuzzy (Promontory 72, Corinne 75, Ogden 10), so filter on locationsText containing 'Utah'. The Eightfold-looking page at jobs.northropgrumman.com is not used; /api/pcsx/search 404s. Mix of engineering and manufacturing roles."
+
+- company: Target
+  platform: workday
+  config: {tenant: target, wd: wd5, site: targetcareers}
+  sites: [clearfield_ut, corinne_ut]
+  search_terms:
+    clearfield_ut: [Layton, Roy, Clearfield, Ogden]
+    corinne_ut: [Logan, Brigham City]
+  verified: true
+  total_postings_seen: 8
+  hourly_relevance: high
+  careers_url: https://corporate.target.com/careers
+  notes: "Layton search returned 8 (store T1755, 815 W 2000 N); Logan 18 incl. a warehouse/distribution posting (T3857); Ogden and Brigham City 0 right now. locationsText is a street address ('815 W 2000 N, Layton,UT 84041-1632'), so match on city/'UT'. Roy search matches 'Royalton' in Ohio - filter on 'UT'."
+
+- company: Fresenius Medical Care (Ogden manufacturing)
+  platform: workday
+  config: {tenant: freseniusmedicalcare, wd: wd3, site: fme}
+  sites: [clearfield_ut]
+  search_terms:
+    clearfield_ut: [Ogden, Utah]
+  verified: true
+  total_postings_seen: 9
+  hourly_relevance: high
+  careers_url: https://jobs.freseniusmedicalcare.com
+  notes: "Ogden search returned 9 (e.g. Mfg Maintenance Technician II, 'Ogden, UT, USA'); 'Utah' search returned 23. Company page https://www.fmcna.com/careers/ redirects to jobs.freseniusmedicalcare.com which links to the Workday board."
+
+- company: Schreiber Foods (Logan)
+  platform: workday
+  config: {tenant: schreiberfoods, wd: wd115, site: Schreiber_Careers}
+  sites: [corinne_ut]
+  search_terms:
+    corinne_ut: [Logan, Cache Valley]
+  verified: true
+  total_postings_seen: 20
+  hourly_relevance: high
+  careers_url: https://www.schreiberfoods.com/careers/
+  notes: "Logan search returned 20 (maintenance techs, distribution; locationsText 'Logan, UT'). Added from own knowledge; Logan is Cache County, in scope for corinne_ut. Wasn't in employers_ut.csv."
+
+- company: Campbell's / Pepperidge Farm (Richmond, UT)
+  platform: workday
+  config: {tenant: campbellsoup, wd: wd5, site: ExternalCareers_GlobalSite}
+  sites: [corinne_ut]
+  search_terms:
+    corinne_ut: [Richmond, Cache Valley, Logan]
+  verified: true
+  total_postings_seen: 23
+  hourly_relevance: high
+  careers_url: https://careers.thecampbellscompany.com/
+  notes: "Richmond search returned 23 (locationsText 'USA - UT - Richmond'; plant services, sanitation). 'Utah' search returned only 1, so use the city name. Richmond UT is in Cache County, about 25 mi from Logan. Not in employers_ut.csv; added from own knowledge."
+
+- company: Kroger / Smith's Food & Drug (incl. Layton Dairy plant)
+  platform: other
+  config:
+    type: oracle_candidate_experience
+    host: eluq.fa.us2.oraclecloud.com
+    site_number: CX_2001
+    request: "GET https://eluq.fa.us2.oraclecloud.com/hcmRestApi/resources/latest/recruitingCEJobRequisitions?onlyData=true&expand=requisitionList.secondaryLocations&finder=findReqs;siteNumber=CX_2001,limit=200,offset=0,sortBy=POSTING_DATES_DESC"
+    response: "items[0].TotalJobsCount (11217 on first page) and items[0].requisitionList[] with Title, PrimaryLocation (e.g. 'Layton, UT, United States'), secondaryLocations. Page with offset += 200; offsets seem capped at 10000."
+    quirks: "keyword= search is fuzzy and empty keyword returns 0, so do NOT rely on keyword; page everything and filter PrimaryLocation containing ', UT'. 326 of the first 10000 were Utah (Layton 15, Ogden 13, Kaysville 12, Logan 9, Salt Lake City 67)."
+  sites: [clearfield_ut, corinne_ut]
+  search_terms:
+    clearfield_ut: [Layton, Clearfield, Kaysville, Ogden, Roy]
+    corinne_ut: [Logan, Brigham City, Ogden]
+  verified: true
+  total_postings_seen: 11217
+  hourly_relevance: high
+  careers_url: https://www.krogerfamilycareers.com/en/sites/CX_2001
+  notes: "jobs.kroger.com redirects to krogerfamilycareers.com, an Oracle Recruiting Cloud site. Smith's postings are Kroger titles (CLERK, DEPT LEADER) in Utah cities. Layton Dairy MFG roles (Machine Operator, Maintenance Mechanic) appear under keyword 'Layton'."
+
+- company: Americold Logistics (Clearfield)
+  platform: other
+  config:
+    type: oracle_candidate_experience
+    host: fa-ewwt-saasfaprod1.fa.ocs.oraclecloud.com
+    site_number: CX_6001
+    request: "GET https://fa-ewwt-saasfaprod1.fa.ocs.oraclecloud.com/hcmRestApi/resources/latest/recruitingCEJobRequisitions?onlyData=true&expand=requisitionList.secondaryLocations&finder=findReqs;siteNumber=CX_6001,limit=200,offset=0,sortBy=POSTING_DATES_DESC"
+    response: "items[0].requisitionList[] with Title and PrimaryLocation; filter on ', UT'. Same shape and quirks as Kroger (empty keyword returns 0)."
+  sites: [clearfield_ut]
+  search_terms:
+    clearfield_ut: [Clearfield, Layton, Ogden]
+  verified: true
+  total_postings_seen: 155
+  hourly_relevance: high
+  careers_url: https://careers.americold.com/
+  notes: "Full paging returned 155 postings, 3 in Utah: Forklift Operator and Supervisor, Warehouse in Clearfield, plus one Salt Lake City engineering role. CX_2001 on the same host also works."
+
+- company: Bonnell Aluminum (Clearfield)
+  platform: other
+  config:
+    type: oracle_candidate_experience
+    host: fa-evgk-saasfaprod1.fa.ocs.oraclecloud.com
+    site_number: CX_1001
+    request: "GET https://fa-evgk-saasfaprod1.fa.ocs.oraclecloud.com/hcmRestApi/resources/latest/recruitingCEJobRequisitions?onlyData=true&expand=requisitionList.secondaryLocations&finder=findReqs;siteNumber=CX_1001,limit=200,offset=0,sortBy=POSTING_DATES_DESC"
+    response: "items[0].requisitionList[]; filter PrimaryLocation containing ', UT'."
+  sites: [clearfield_ut]
+  search_terms:
+    clearfield_ut: [Clearfield, Layton]
+  verified: true
+  total_postings_seen: 48
+  hourly_relevance: high
+  careers_url: https://bonnellaluminum.com/careers
+  notes: "48 postings total, 4 in Clearfield (Extrusion Operator Level 1, Demand Management Operator, Precision Parts Team Leader, Engineering Tech). Careers page link was found wrapped in a urldefense URL; host/site number taken from it."
+
+- company: Dollar General
+  platform: other
+  config:
+    type: oracle_candidate_experience
+    host: ibxwjb.fa.ocs.oraclecloud.com
+    site_number: CX_1001
+    request: "GET https://ibxwjb.fa.ocs.oraclecloud.com/hcmRestApi/resources/latest/recruitingCEJobRequisitions?onlyData=true&expand=requisitionList.secondaryLocations&finder=findReqs;siteNumber=CX_1001,limit=200,offset=0,sortBy=POSTING_DATES_DESC"
+    response: "items[0].TotalJobsCount (91057) and requisitionList[]. Too large to page fully (offset cap about 10000); use keyword=\"<City>, UT\" style searches instead (store titles contain the city, e.g. 'SALES ASSOCIATE - PT - Morgan, UT STORE #32172')."
+    quirks: "keyword is fuzzy (Layton matched Lawton), so verify PrimaryLocation after each search."
+  sites: [clearfield_ut, corinne_ut]
+  search_terms:
+    clearfield_ut: [Clearfield, Layton, Roy, Morgan]
+    corinne_ut: [Brigham City, Tremonton, Logan]
+  verified: true
+  total_postings_seen: 91057
+  hourly_relevance: medium
+  careers_url: https://careers.dollargeneral.com
+  notes: "Retail, low hours per store, many stores. Within the first 10000 results 7 were Utah (Morgan 6, Saint George 1), so keyword-by-city is the practical route. CX_1 is also a valid site number on this host."
+
+- company: Autoliv (Ogden, Brigham City, Tremonton, Promontory)
+  platform: other
+  config:
+    type: teamtailor_rss
+    request: "GET https://careerunitedstates.autoliv.com/jobs.rss (also https://autolivunitedstates.teamtailor.com/jobs.rss)"
+    response: "RSS 2.0 XML, one <item> per job with <title>, <description> (HTML, often includes pay such as $21.92-$24.39/hour), <link>, and <tt:locations><tt:location><tt:name> entries."
+    quirks: "Filter on tt:name: 'Ogden - Assembly (AOA)', 'Ogden - Service (AOS)', 'Ogden - Technical Center (OTC)', 'Brigham City (IBC)', 'Tremonton (ITO)', 'Promontory (PRO)'."
+  sites: [clearfield_ut, corinne_ut]
+  search_terms:
+    clearfield_ut: [Ogden]
+    corinne_ut: [Brigham City, Tremonton, Promontory, Ogden]
+  verified: true
+  total_postings_seen: 46
+  hourly_relevance: high
+  careers_url: https://careerunitedstates.autoliv.com/jobs
+  notes: "46 items in the feed: 17 Ogden Assembly, 5 Ogden Technical Center, 2 Ogden Service, 2 Brigham City, 4 Tremonton, 7 Promontory. Includes 'Production Worker - Brigham City' at $21.92-$24.39/hr. autoliv.wd3.myworkdayjobs.com exists (HTTP 406 at root) but no valid site found; the RSS feed is the working source."
+
+- company: Williams International (Ogden)
+  platform: other
+  config:
+    type: ukg_ultipro_jobboard
+    request: "POST https://recruiting.ultipro.com/WIL1006WI/JobBoard/b5d9d0d6-a149-4636-95d5-8dfede315cab/JobBoardView/LoadSearchResults with JSON {\"opportunitySearch\":{\"Top\":50,\"Skip\":0,\"QueryString\":\"\",\"OrderBy\":[{\"Value\":\"postedDateDesc\",\"PropertyName\":\"PostedDate\",\"Ascending\":false}],\"Filters\":[]},\"matchCriteria\":{\"PreferredJobs\":[],\"Criteria\":[],\"SearchScore\":0,\"Relationship\":0,\"PreferredScore\":0,\"FilterByScore\":false}}"
+    response: "JSON with totalCount and opportunities[] (Title, Locations[].Address.City and State.Code, postedDate). Page with Skip += 50."
+  sites: [clearfield_ut]
+  search_terms:
+    clearfield_ut: [Ogden]
+  verified: true
+  total_postings_seen: 167
+  hourly_relevance: high
+  careers_url: https://www.williams-int.com/careers/
+  notes: "167 postings: 95 Ogden UT, 72 Pontiac MI. Ogden roles include Casting Technician, CNC Machinist, Welding Technician, CMM Operator, Production Control. Filter on Locations[0].Address.City == 'Ogden'."
+
+- company: Barnes Aerospace (Ogden)
+  platform: other
+  config:
+    type: ukg_ultipro_jobboard
+    request: "POST https://recruiting.ultipro.com/BAR1005BGI/JobBoard/ff46b34e-c0ce-4e3c-adbb-8bf890b80d89/JobBoardView/LoadSearchResults with the same JSON body as the Williams International entry (Top up to 100)."
+    response: "JSON totalCount and opportunities[] with Locations[].Address.City."
+    quirks: "Barnes has several boards under tenant BAR1005BGI; this one (ff46b34e...) holds the US sites. The other three (23a8fb61, 83d0c081, a091db89) were UK/Singapore or empty."
+  sites: [clearfield_ut]
+  search_terms:
+    clearfield_ut: [Ogden]
+  verified: true
+  total_postings_seen: 94
+  hourly_relevance: high
+  careers_url: https://barnesaero.com/careers/
+  notes: "94 postings, 8 in Ogden (Assembly 1st shift, Assembler, Bencher 2nd shift). Not in employers_ut.csv; added from own knowledge. Ogden location is the Barnes Aerospace Ogden facility."
+
+- company: Lifetime Products (Clearfield)
+  platform: other
+  config:
+    type: applicantpro
+    request: "GET https://lifetime.applicantpro.com/core/jobs/5746?getParams=%7B%7D with Accept: application/json"
+    response: "JSON data.jobs[] with id, title, city, abbreviation (state), classification, jobCount. Without the getParams query it returns an error."
+  sites: [clearfield_ut]
+  search_terms:
+    clearfield_ut: [Clearfield, Riverdale, Layton]
+  verified: true
+  total_postings_seen: 14
+  hourly_relevance: high
+  careers_url: https://lifetime.applicantpro.com/jobs/
+  notes: "14 postings, 6 in Clearfield: maintenance technician, logistics, seasonal retail store installer and sales associate roles (Lifetime also runs retail stores). Domain id 5746 comes from the page source."
+
+- company: Lowe's
+  platform: other
+  config:
+    type: phenom_widgets
+    request: "POST https://talent.lowes.com/widgets with JSON {\"lang\":\"en_us\",\"deviceType\":\"desktop\",\"country\":\"us\",\"pageName\":\"search-results\",\"ddoKey\":\"refineSearch\",\"sortBy\":\"\",\"subsearch\":\"\",\"from\":0,\"jobs\":true,\"counts\":true,\"all_fields\":[\"category\",\"country\",\"state\",\"city\",\"type\"],\"size\":50,\"clearAll\":false,\"jdsource\":\"facets\",\"isSliderEnable\":false,\"pageId\":\"page11\",\"siteType\":\"external\",\"keywords\":\"\",\"global\":true,\"selected_fields\":{\"state\":[\"Utah\"]},\"locationData\":{}}"
+    response: "JSON refineSearch.totalHits and refineSearch.data.jobs[] (title, location like 'Salt Lake City, UT 2275', city, state). Page with from += size."
+    quirks: "The free-text 'location' field does NOT filter; use selected_fields state/city facets. pageId/siteType are scraped from the /us/en/search-results page HTML (page11 / external worked)."
+  sites: [clearfield_ut, corinne_ut]
+  search_terms:
+    clearfield_ut: [Layton, Ogden, Clearfield]
+    corinne_ut: [Logan, Brigham City, Ogden]
+  verified: true
+  total_postings_seen: 43
+  hourly_relevance: medium
+  careers_url: https://talent.lowes.com/us/en
+  notes: "43 Utah postings with the state facet (4408 total). Mostly part-time retail sales, cashier, CDL delivery. Needs city filtering after the call."
+
+- company: UPS
+  platform: other
+  config:
+    type: phenom_widgets
+    request: "POST https://www.jobs-ups.com/widgets with the same JSON body as the Lowe's entry (selected_fields {\"state\":[\"Utah\"]}); pageId/siteType read from https://www.jobs-ups.com/us/en/search-results"
+    response: "refineSearch.totalHits and refineSearch.data.jobs[]; location is a street address string ('2750 PENNSYLVANIA AVE, OGDEN, UT 84401, United States of America')."
+  sites: [clearfield_ut, corinne_ut]
+  search_terms:
+    clearfield_ut: [Ogden, Layton, Clearfield]
+    corinne_ut: [Ogden, Logan]
+  verified: true
+  total_postings_seen: 31
+  hourly_relevance: high
+  careers_url: https://www.jobs-ups.com/us/en
+  notes: "31 Utah postings (1587 total); Ogden building at 2750 Pennsylvania Ave has Part Time Helper Coordinator, preload roles. Most others are Salt Lake City (380 S 6400 W)."
+
+- company: Procter & Gamble (Box Elder plant, Bear River City)
+  platform: other
+  config:
+    type: phenom_widgets
+    request: "POST https://www.pgcareers.com/widgets with the same JSON body as the Lowe's entry (selected_fields {\"state\":[\"Utah\"]}); pageId/siteType read from https://www.pgcareers.com/us/en/search-results"
+    response: "refineSearch.totalHits and refineSearch.data.jobs[] with city/state."
+  sites: [corinne_ut]
+  search_terms:
+    corinne_ut: [Bear River City, Box Elder, Tremonton, Brigham City]
+  verified: true
+  total_postings_seen: 6
+  hourly_relevance: high
+  careers_url: https://www.pgcareers.com/us/en
+  notes: "Utah facet returned 6 hits, including 'Box Elder Plant Technician' in BEAR RIVER CITY, Utah. The P&G plant is listed under Bear River City (Box Elder County), not Brigham City. Filtering by city 'Box Elder' returns 0; use state=Utah and match on the city field."
+
+- company: Post Consumer Brands (Tremonton)
+  platform: other
+  config:
+    type: jibe_api
+    request: "GET https://jobs.postholdings.com/api/jobs?limit=100&page=1&location=Tremonton%2C%20UT"
+    response: "JSON {jobs:[{data:{title, city, state, location_name, employment_type, posted_date, ...}}], totalCount}. The location param is fuzzy: 10 hits of which 3 are Tremonton; filter data.city == 'Tremonton'. The stateCode param is ignored."
+  sites: [corinne_ut]
+  search_terms:
+    corinne_ut: [Tremonton, Brigham City]
+  verified: true
+  total_postings_seen: 10
+  hourly_relevance: high
+  careers_url: https://jobs.postholdings.com/careers-home
+  notes: "Tremonton RTE plant: Maintenance Technician II Night Shift, Machine Operator Night Shift Line 1, Machine Operator Day Shift Line 1. All Post Holdings units (Bob Evans, Michael Foods) share this board. Tremonton location code is 'Tremonton - RTE'."
+
+- company: West Liberty Foods (Tremonton)
+  platform: other
+  config:
+    type: adp_myjobs
+    request: "GET https://myjobs.adp.com/public/staffing/v1/job-requisitions?$top=100&$skip=0 with headers orgoid: G3984F35EJZ84F4Z and Accept: application/json"
+    response: "JSON {count, jobRequisitions:[{jobTitle, reqId, requisitionLocations:[{address:{cityName, countrySubdivisionLevel1}}]}]}. Filter cityName == 'Tremonton'."
+    quirks: "orgoid comes from GET https://myjobs.adp.com/public/staffing/v1/career-site/westlibertyfoodscareers (field orgoid). Without the orgoid header the API returns 400."
+  sites: [corinne_ut]
+  search_terms:
+    corinne_ut: [Tremonton]
+  verified: true
+  total_postings_seen: 80
+  hourly_relevance: high
+  careers_url: https://careers.wlfoods.com/
+  notes: "80 postings across West Liberty IA (44), Tremonton UT (24), Bolingbrook IL (12). Tremonton roles: Maintenance Mechanic, Kitting General Labor, Warehouse Operator, Logfab. www.westlibertyfoods.com now redirects to a parked domain; the real site is wlfoods.com."
+
+- company: Lakeshore Learning Materials (Garland distribution center)
+  platform: smartrecruiters
+  config: {company: Lakeshore}
+  sites: [corinne_ut]
+  search_terms:
+    corinne_ut: [Garland, Tremonton, Brigham City]
+  verified: true
+  total_postings_seen: 120
+  hourly_relevance: high
+  careers_url: https://www.smartrecruiters.com/Lakeshore
+  notes: "API returned totalFound 120 (mostly California). No Garland/Utah postings in the SmartRecruiters feed right now, though third-party sites (Built In) show Garland DC supervisor roles, so entry-level DC jobs may be posted elsewhere or filled via staffing. www.lakeshorelearning.com/careers returns 403 to scripts. Re-check periodically."
+
+- company: Amer Sports / Salomon North America (Ogden)
+  platform: smartrecruiters
+  config: {company: Salomon}
+  sites: [clearfield_ut]
+  search_terms:
+    clearfield_ut: [Ogden]
+  verified: true
+  total_postings_seen: 78
+  hourly_relevance: low
+  careers_url: https://careers.smartrecruiters.com/Salomon/
+  notes: "Ogden postings are corporate/office roles (demand planner, marketing, customer service). Amer Sports also uses Workable (apply.workable.com/amer-sports returned 0) and iCIMS for Wilson. Include only if distribution-center roles show up."
+
+- company: iFit / ICON Health & Fitness (Logan)
+  platform: greenhouse
+  config: {token: ifit}
+  sites: [corinne_ut]
+  search_terms:
+    corinne_ut: [Logan, Cache Valley]
+  verified: true
+  total_postings_seen: 28
+  hourly_relevance: low
+  careers_url: https://www.ifit.com/about/careers
+  notes: "28 jobs on the board; location of each not checked. Mostly software/corporate; low hourly relevance."
+
+- company: Lagoon Corporation (Farmington)
+  platform: other
+  config:
+    type: paylocity_embedded_json
+    request: "GET https://recruiting.paylocity.com/Recruiting/Jobs/All/62026745-000e-473c-8394-cd0953cac964 and parse the JSON object assigned to window.pageData in the HTML (key Jobs[] with JobTitle, LocationName)."
+  sites: [clearfield_ut]
+  search_terms:
+    clearfield_ut: [Farmington, Lagoon]
+  verified: true
+  total_postings_seen: 6
+  hourly_relevance: low
+  careers_url: https://www.lagoonpark.com/jobs/
+  notes: "6 postings in the off-season (Ride Maintenance Technician, Concrete Finisher...). Seasonal; seasonal hiring ramps in spring. All jobs are at one location."
+
+- company: Utility Trailer Manufacturing (Clearfield)
+  platform: unsupported
+  config: {}
+  sites: [clearfield_ut]
+  search_terms:
+    clearfield_ut: [Clearfield]
+  verified: false
+  total_postings_seen: null
+  hourly_relevance: high
+  careers_url: https://www.utilitytrailer.com/career_plant/clearfield-ut/
+  notes: "Per-plant WordPress page with a contact/application form (Contact Form 7), no job board or ATS and no listings in the HTML. High-value welding/assembly employer but needs manual or HTML-scrape handling."
+
+- company: Hill Air Force Base (civil service and contractors)
+  platform: unsupported
+  config: {}
+  sites: [clearfield_ut]
+  search_terms:
+    clearfield_ut: [Hill AFB, Clearfield, Layton, Ogden]
+  verified: false
+  total_postings_seen: null
+  hourly_relevance: medium
+  careers_url: https://www.usajobs.gov
+  notes: "Federal postings are on USAJOBS, whose API needs a registered key (not unauthenticated). Not probed beyond that. Wage-grade mechanic and logistics roles."
+
+- company: Costco Wholesale
+  platform: unsupported
+  config: {}
+  sites: [clearfield_ut, corinne_ut]
+  search_terms:
+    clearfield_ut: [Layton, Ogden, Clearfield]
+    corinne_ut: [Logan, Ogden]
+  verified: false
+  total_postings_seen: null
+  hourly_relevance: high
+  careers_url: https://www.costco.com/f/-/career-opportunities
+  notes: "Site is a JavaScript page; apply link goes to a Taleo instance (phf.tbe.taleo.net/phf02), whose jobSearch URL returned HTTP 500 to a plain request. No usable public JSON found."
+
+- company: FedEx (Ground / Express)
+  platform: unsupported
+  config: {}
+  sites: [clearfield_ut, corinne_ut]
+  search_terms:
+    clearfield_ut: [Ogden, Layton, Clearfield]
+    corinne_ut: [Ogden, Logan]
+  verified: false
+  total_postings_seen: null
+  hourly_relevance: high
+  careers_url: https://careers.fedex.com/
+  notes: "Paradox-based site; /api/jobs returns 403 Access Denied to scripts. Marked unsupported rather than working around bot protection."
+
+- company: Nucor (Vulcraft, Building Systems, Steel Plymouth)
+  platform: unsupported
+  config: {}
+  sites: [corinne_ut]
+  search_terms:
+    corinne_ut: [Brigham City, Plymouth, Tremonton]
+  verified: false
+  total_postings_seen: null
+  hourly_relevance: high
+  careers_url: https://jobs.nucor.com/
+  notes: "SuccessFactors career site builder (company=nucorcorpo); HTML only, no unauthenticated JSON endpoint demonstrated. Would need HTML scraping of /search/?q=...&locationsearch=Brigham+City. Major hourly welding/fabrication employer."
+
+- company: JBS / Swift Beef (Hyrum)
+  platform: unsupported
+  config: {}
+  sites: [corinne_ut]
+  search_terms:
+    corinne_ut: [Hyrum, Logan]
+  verified: false
+  total_postings_seen: null
+  hourly_relevance: high
+  careers_url: https://jobs.jbsfoodsgroup.com/
+  notes: "Returns 403 to scripts; not worked around. Large hourly meat-processing employer in Cache County."
+
+- company: Parker Hannifin (Ogden)
+  platform: unsupported
+  config: {}
+  sites: [clearfield_ut]
+  search_terms:
+    clearfield_ut: [Ogden]
+  verified: false
+  total_postings_seen: null
+  hourly_relevance: medium
+  careers_url: https://www.parker.com/us/en/careers.html
+  notes: "403 to scripts; board not identified."
+
+- company: Harmons Grocery
+  platform: unsupported
+  config: {}
+  sites: [clearfield_ut]
+  search_terms:
+    clearfield_ut: [Layton, Farmington, Centerville]
+  verified: false
+  total_postings_seen: null
+  hourly_relevance: medium
+  careers_url: https://dayforcehcm.com/CandidatePortal/en-US/harmons
+  notes: "Dayforce candidate portal; the public search API returned 403."
+
+- company: Performance Food Group / Core-Mark / Kathy Kaye Foods (Logan)
+  platform: unsupported
+  config: {}
+  sites: [corinne_ut]
+  search_terms:
+    corinne_ut: [Logan]
+  verified: false
+  total_postings_seen: null
+  hourly_relevance: high
+  careers_url: https://jobs.performancefoodservice.com/
+  notes: "Radancy/TalentBrew style HTML site; no JSON API demonstrated. Logan postings exist (production worker/lead 2nd shift). Added from search results, not from the CSV."
+
+- company: WinCo Foods
+  platform: unsupported
+  config: {}
+  sites: [clearfield_ut, corinne_ut]
+  search_terms:
+    clearfield_ut: [Layton, Ogden, Roy, Clearfield]
+    corinne_ut: [Brigham City, Logan, Ogden]
+  verified: false
+  total_postings_seen: null
+  hourly_relevance: high
+  careers_url: https://www.wincofoods.com/careers
+  notes: "403 to scripts; board not identified."
+
+- company: Staffing agencies (PeopleReady, Express Employment, Staffmark, Kelly)
+  platform: unsupported
+  config: {}
+  sites: [clearfield_ut, corinne_ut]
+  search_terms:
+    clearfield_ut: [Ogden, Layton, Clearfield]
+    corinne_ut: [Brigham City, Logan, Ogden]
+  verified: false
+  total_postings_seen: null
+  hourly_relevance: high
+  careers_url: https://www.peopleready.com
+  notes: "Not probed individually. Their home pages expose no common ATS; Kelly's corporate board is Workday (kellyservices.wd503 / corporatecareers-kellyservices-com) but is for internal staff. Large share of Freeport Center and Box Elder plant hiring runs through staffing, so these are a known coverage gap."
+
+- company: Bridor (planned Brigham City bakery)
+  platform: unsupported
+  config: {}
+  sites: [corinne_ut]
+  search_terms:
+    corinne_ut: [Brigham City]
+  verified: false
+  total_postings_seen: null
+  hourly_relevance: high
+  careers_url: https://inlandportauthority.utah.gov/in-the-news/bridor-will-invest-230m-to-build-bakery-in-brigham-city-employ-400/
+  notes: "Plant not yet an incumbent employer and no careers board checked. Revisit when it opens."

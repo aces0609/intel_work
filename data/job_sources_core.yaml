@@ -1,0 +1,27 @@
+# Chains with dedicated connectors; they hire hourly labor at every site, so they apply everywhere.
+# Platform shapes were checked live on 2026-10-19 (see src/touch_labor/jobs/connectors.py).
+- company: Walmart
+  platform: walmart
+  sites: all
+  verified: true
+  hourly_relevance: high
+  careers_url: https://careers.walmart.com/
+  notes: >
+    Stores, Sam's Club and distribution centers. Uses the public /api/graphql search the careers
+    page itself calls. Job URLs are not exposed by that API, so postings link to the search page.
+- company: The Home Depot
+  platform: homedepot
+  sites: all
+  verified: true
+  hourly_relevance: high
+  careers_url: https://careers.homedepot.com/
+  notes: Findly / Google Cloud Talent search with a radius filter; includes stores and distribution centers.
+- company: Amazon
+  platform: amazon
+  sites: all
+  verified: true
+  hourly_relevance: medium
+  careers_url: https://www.amazon.jobs/
+  notes: >
+    amazon.jobs only. Hourly fulfillment-center associate roles are posted on hiring.amazon.com
+    (a separate system not covered here), so counts understate warehouse hiring.
