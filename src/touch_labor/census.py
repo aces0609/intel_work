@@ -16,7 +16,7 @@ from .common import ROOT, UA, cached_json
 ACS_RELEASE = "acs2024_5yr"  # ACS 2020-2024
 ACS_LABEL = "ACS 2020-2024 5-year"
 CR = f"https://api.censusreporter.org/1.0/data/show/{ACS_RELEASE}"
-CBP_YEAR = 2022
+CBP_YEAR = 2023
 CBP = f"https://api.census.gov/data/{CBP_YEAR}/cbp"
 
 TABLES = ["B01001", "B01002", "B01003", "B15003", "B19013", "B23025", "B25064", "B25077"]

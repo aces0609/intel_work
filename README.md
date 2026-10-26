@@ -23,6 +23,20 @@ Inputs that must be in `data/raw/` (gitignored; bls.gov blocks scripted download
 Census gazetteers and the IPEDS directory download automatically. ACS comes from Census Reporter's public API.
 County Business Patterns needs a free `CENSUS_API_KEY` (env var or `.env`); without it that sheet is skipped.
 
+## Refreshing the report
+
+Re-run the data pulls, then rebuild and print the memo tables:
+
+```bash
+uv --directory <repo> run python -m touch_labor.jobs run        # job postings (slow; see jobs README)
+uv --directory <repo> run python -m touch_labor.build           # workbook (ACS, CBP, OEWS, IPEDS, employers, jobs)
+uv --directory <repo> run python -m touch_labor.memo_tables     # markdown tables to paste into MEMO.md
+```
+
+The employer lists (`data/employers_*.csv`) are manual web research; refresh them by re-verifying each row's
+source. Vintages to bump when new releases appear: `ACS_RELEASE` and `CBP_YEAR` in `census.py`, the IPEDS year in
+`education.py`, the gazetteer year in `geo.py`, and the OEWS files in `data/raw/` (see above).
+
 ## Active job postings
 
 `uv --directory <repo> run python -m touch_labor.jobs run` pulls open postings from employers' career sites

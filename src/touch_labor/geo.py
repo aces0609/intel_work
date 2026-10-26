@@ -1,6 +1,7 @@
 """Resolve each location to coordinates and its labor-shed counties."""
 from __future__ import annotations
 
+import io
 import math
 import re
 import zipfile
@@ -9,15 +10,18 @@ import pandas as pd
 
 from .common import download
 
-GAZ = "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2023_Gazetteer"
+GAZ = "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2025_Gazetteer"
 SHED_MILES = 40
 
 
 def _gaz(kind: str) -> pd.DataFrame:
-    zpath = download(f"{GAZ}/2023_Gaz_{kind}_national.zip")
+    zpath = download(f"{GAZ}/2025_Gaz_{kind}_national.zip")
     with zipfile.ZipFile(zpath) as z:
         with z.open(z.namelist()[0]) as f:
-            df = pd.read_csv(f, sep="\t", dtype=str, encoding="latin-1")
+            raw = f.read().decode("latin-1")
+    # 2023 files were tab-delimited; 2025 files are pipe-delimited
+    sep = "|" if "|" in raw.split("\n", 1)[0] else "\t"
+    df = pd.read_csv(io.StringIO(raw), sep=sep, dtype=str)
     df.columns = [c.strip() for c in df.columns]
     df["INTPTLAT"] = df["INTPTLAT"].astype(float)
     df["INTPTLONG"] = df["INTPTLONG"].astype(float)

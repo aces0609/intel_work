@@ -8,7 +8,7 @@ import pandas as pd
 from .common import download
 from .geo import haversine_miles
 
-IPEDS_URL = "https://educationdata.urban.org/api/v1/college-university/ipeds/directory/2022/"
+IPEDS_URL = "https://educationdata.urban.org/api/v1/college-university/ipeds/directory/2025/"
 RADIUS_MILES = 30
 
 # IPEDS sector codes
@@ -20,9 +20,14 @@ SECTOR_LABEL = {
 
 
 def _directory() -> pd.DataFrame:
-    path = download(IPEDS_URL, "ipeds_dir_2022.json")
+    path = download(IPEDS_URL, "ipeds_dir_2025.json")
     df = pd.DataFrame(json.loads(path.read_text(encoding="utf-8"))["results"])
-    df = df[(df["currently_active_ipeds"] == 1) & df["sector"].isin(SECTOR_LABEL)]
+    df = df[(df["currently_active_ipeds"] == 1) & df["sector"].isin(SECTOR_LABEL)].copy()
+    # Community colleges that now award a few bachelor's degrees are listed as 4-year sectors
+    # (e.g. Antelope Valley College, College of the Canyons). Carnegie 2021 basic classes 1-14 are
+    # Associate's colleges, so treat those as 2-year institutions to keep the community-college count honest.
+    assoc = df["cc_basic_2021"].between(1, 14) & df["sector"].isin([1, 2, 3])
+    df.loc[assoc, "sector"] = df.loc[assoc, "sector"] + 3
     return df.dropna(subset=["latitude", "longitude"])
 
 

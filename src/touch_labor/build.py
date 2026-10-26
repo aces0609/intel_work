@@ -20,7 +20,7 @@ SOURCES = [
      f"Census County Business Patterns {census.CBP_YEAR}, summed over the labor-shed counties (only if a Census API key is active)"),
     ("Occupational employment and wages",
      "BLS OEWS May 2025, metropolitan / nonmetropolitan area containing the site's county (https://www.bls.gov/oes/)"),
-    ("Colleges and trade schools", "IPEDS institutional directory 2022 via the Urban Institute Education Data API, within 30 miles"),
+    ("Colleges and trade schools", "IPEDS institutional directory 2025 via the Urban Institute Education Data API, within 30 miles"),
     ("Named large employers", "Web research per row; each row carries its source URL, as-of year and confidence (data/employers_*.csv)"),
 ]
 ASSUMPTIONS = [
